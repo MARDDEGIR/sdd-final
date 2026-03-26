@@ -1,5 +1,5 @@
 # @req SCI-ANS-001, SCI-HELM-006
-namespace: sdd-navigator
+k8s_namespace: sdd-navigator
 release_name: sdd-navigator
 chart_path: "{{ playbook_dir }}/../charts/sdd-navigator"
 api_image: ghcr.io/marddegir/sdd-navigator-api

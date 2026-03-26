@@ -1,57 +1,70 @@
 # @req SCI-ANS-002, SCI-ANS-003
 ---
-- name: Check API healthcheck
-  ansible.builtin.shell: |
-    kubectl run curl-test --image=curlimages/curl:8.5.0 --restart=Never --rm -i -n {{ namespace }} \
-      -- curl -s -w "%{http_code}" -o /dev/null http://{{ release_name }}-api:8080/healthcheck
-  register: healthcheck_result
+- name: Check API healthcheck endpoint
+  ansible.builtin.command:
+    cmd: >
+      kubectl run curl-test --image=curlimages/curl:8.5.0
+      --restart=Never --rm -i -n {{ k8s_namespace }}
+      -- curl -s -w "%{http_code}" -o /dev/null
+      http://{{ release_name }}-api:8080/healthcheck
+  register: validate_healthcheck
   changed_when: false
   ignore_errors: true
 
 - name: Report healthcheck
   ansible.builtin.debug:
-    msg: "HEALTHCHECK: {{ 'PASS' if healthcheck_result.stdout == '200' else 'FAIL' }}"
+    msg: "HEALTHCHECK: {{ 'PASS' if validate_healthcheck.stdout == '200' else 'FAIL' }}"
 
-- name: Check API stats
-  ansible.builtin.shell: |
-    kubectl run curl-stats --image=curlimages/curl:8.5.0 --restart=Never --rm -i -n {{ namespace }} \
-      -- curl -s -w "%{http_code}" -o /dev/null http://{{ release_name }}-api:8080/stats
-  register: stats_result
+- name: Check API stats endpoint
+  ansible.builtin.command:
+    cmd: >
+      kubectl run curl-stats --image=curlimages/curl:8.5.0
+      --restart=Never --rm -i -n {{ k8s_namespace }}
+      -- curl -s -w "%{http_code}" -o /dev/null
+      http://{{ release_name }}-api:8080/stats
+  register: validate_stats
   changed_when: false
   ignore_errors: true
 
 - name: Report stats
   ansible.builtin.debug:
-    msg: "STATS: {{ 'PASS' if stats_result.stdout == '200' else 'FAIL' }}"
+    msg: "STATS: {{ 'PASS' if validate_stats.stdout == '200' else 'FAIL' }}"
 
-- name: Check all pods Running
-  ansible.builtin.shell: kubectl get pods -n {{ namespace }} --field-selector=status.phase!=Running --no-headers 2>/dev/null | wc -l
-  register: non_running
+- name: Get non-running pods count
+  ansible.builtin.command:
+    cmd: kubectl get pods -n {{ k8s_namespace }} --field-selector=status.phase!=Running --no-headers
+  register: validate_pods
   changed_when: false
+  ignore_errors: true
 
 - name: Report pods
   ansible.builtin.debug:
-    msg: "PODS RUNNING: {{ 'PASS' if non_running.stdout | int == 0 else 'FAIL' }}"
+    msg: "PODS RUNNING: {{ 'PASS' if validate_pods.stdout == '' else 'FAIL' }}"
 
-- name: Check PostgreSQL
-  ansible.builtin.shell: |
-    kubectl exec -n {{ namespace }} \
-      $(kubectl get pod -n {{ namespace }} -l app.kubernetes.io/name=postgresql -o jsonpath="{.items[0].metadata.name}") \
-      -- pg_isready -U {{ db_user }} -d {{ db_name }}
-  register: pg_result
+- name: Get PostgreSQL pod name
+  ansible.builtin.command:
+    cmd: kubectl get pod -n {{ k8s_namespace }} -l app.kubernetes.io/name=postgresql -o jsonpath={.items[0].metadata.name}
+  register: validate_pg_pod
+  changed_when: false
+  ignore_errors: true
+
+- name: Check PostgreSQL readiness
+  ansible.builtin.command:
+    cmd: kubectl exec -n {{ k8s_namespace }} {{ validate_pg_pod.stdout }} -- pg_isready -U {{ db_user }} -d {{ db_name }}
+  register: validate_pg
   changed_when: false
   ignore_errors: true
 
 - name: Report PostgreSQL
   ansible.builtin.debug:
-    msg: "POSTGRESQL: {{ 'PASS' if pg_result.rc == 0 else 'FAIL' }}"
+    msg: "POSTGRESQL: {{ 'PASS' if validate_pg.rc == 0 else 'FAIL' }}"
 
-- name: Summary
+- name: Validation summary
   ansible.builtin.debug:
     msg:
       - "===== VALIDATION SUMMARY ====="
-      - "HEALTHCHECK:  {{ 'PASS' if healthcheck_result.stdout == '200' else 'FAIL' }}"
-      - "STATS:        {{ 'PASS' if stats_result.stdout == '200' else 'FAIL' }}"
-      - "PODS RUNNING: {{ 'PASS' if non_running.stdout | int == 0 else 'FAIL' }}"
-      - "POSTGRESQL:   {{ 'PASS' if pg_result.rc == 0 else 'FAIL' }}"
+      - "HEALTHCHECK:  {{ 'PASS' if validate_healthcheck.stdout == '200' else 'FAIL' }}"
+      - "STATS:        {{ 'PASS' if validate_stats.stdout == '200' else 'FAIL' }}"
+      - "PODS RUNNING: {{ 'PASS' if validate_pods.stdout == '' else 'FAIL' }}"
+      - "POSTGRESQL:   {{ 'PASS' if validate_pg.rc == 0 else 'FAIL' }}"
       - "=============================="
