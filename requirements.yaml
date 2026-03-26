@@ -1,0 +1,5 @@
+- id: SCI-TRACE-001
+  type: FR
+  title: Traceability requirement
+  description: Required for traceability check
+  createdAt: "2026-03-27"
