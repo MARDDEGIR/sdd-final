@@ -9,6 +9,13 @@ EXIT_CODE=0
 echo "========================================="
 echo "  SDD Navigator Traceability Check"
 echo "========================================="
+echo "Repo root: ${REPO_ROOT}"
+echo "Requirements: ${REQUIREMENTS_FILE}"
+
+if [ ! -f "${REQUIREMENTS_FILE}" ]; then
+  echo "ERROR: requirements.yaml not found at ${REQUIREMENTS_FILE}"
+  exit 1
+fi
 
 VALID_IDS=$(grep "^  - id:" "${REQUIREMENTS_FILE}" | awk "{print \$3}")
 
