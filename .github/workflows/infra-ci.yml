@@ -3,7 +3,7 @@ name: Infrastructure CI
 
 on:
   push:
-    branches: ["**"]
+    branches: "**"
   pull_request:
     branches: [main]
 
