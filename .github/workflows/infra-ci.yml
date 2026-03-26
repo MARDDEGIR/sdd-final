@@ -61,7 +61,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       # @req SCI-TRACE-001
-      - run: bash scripts/check-traceability.sh
+      - name: Run traceability
+        run: bash scripts/check-traceability.sh
+        env:
+          REPO_ROOT: ${{ github.workspace }}
 
   summary:
     name: CI Summary

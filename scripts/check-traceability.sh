@@ -2,15 +2,7 @@
 # @req SCI-TRACE-001
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-
-# В GitHub Actions путь будет /home/runner/work/repo/repo
-# dirname даст нам правильный корень
-if [ ! -f "${REPO_ROOT}/requirements.yaml" ]; then
-  REPO_ROOT="$(cd "${SCRIPT_DIR}" && pwd)"
-fi
-
+REPO_ROOT="${REPO_ROOT:-$(pwd)}"
 REQUIREMENTS_FILE="${REPO_ROOT}/requirements.yaml"
 EXIT_CODE=0
 
@@ -21,11 +13,10 @@ echo "Repo root: ${REPO_ROOT}"
 
 if [ ! -f "${REQUIREMENTS_FILE}" ]; then
   echo "ERROR: requirements.yaml not found at ${REQUIREMENTS_FILE}"
-  ls -la "${SCRIPT_DIR}/../"
   exit 1
 fi
 
-VALID_IDS=$(grep "^  - id:" "${REQUIREMENTS_FILE}" | awk '{print $3}')
+VALID_IDS=$(grep "^  - id:" "${REQUIREMENTS_FILE}" | awk "{print \$3}")
 
 UNANNOTATED=()
 ORPHANS=()
