@@ -2,7 +2,7 @@
 # @req SCI-TRACE-001
 set -euo pipefail
 
-REPO_ROOT="$(git rev-parse --show-toplevel)"
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 REQUIREMENTS_FILE="${REPO_ROOT}/requirements.yaml"
 EXIT_CODE=0
 
@@ -12,7 +12,7 @@ echo "========================================="
 echo "Repo root: ${REPO_ROOT}"
 
 if [ ! -f "${REQUIREMENTS_FILE}" ]; then
-  echo "ERROR: requirements.yaml not found"
+  echo "ERROR: requirements.yaml not found at ${REQUIREMENTS_FILE}"
   exit 1
 fi
 
