@@ -1,18 +1,5 @@
 extends: relaxed
-rules:
-  line-length:
-    max: 300
-    level: warning
-  comments:
-    min-spaces-from-content: 1
-    level: warning
-  truthy:
-    allowed-values: ["true", "false", "yes", "no"]
-    check-keys: false
-    level: warning
-  braces:
-    max-spaces-inside: 1
-    level: warning
-  brackets:
-    max-spaces-inside: 1
-    level: warning
+ignore: |
+  charts/*/templates/*.yaml
+  charts/*/charts/*/templates/*.yaml
+  ansible/roles/*/tasks/*.yml
