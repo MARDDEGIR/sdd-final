@@ -1,4 +1,6 @@
 extends: relaxed
+ignore: |
+  charts/
 rules:
   line-length:
     max: 300
