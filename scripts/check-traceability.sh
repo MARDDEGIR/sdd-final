@@ -2,10 +2,13 @@
 # @req SCI-TRACE-001
 set -euo pipefail
 
-if [ -n "${GITHUB_WORKSPACE:-}" ]; then
-  REPO_ROOT="${GITHUB_WORKSPACE}"
-else
-  REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+# В GitHub Actions путь будет /home/runner/work/repo/repo
+# dirname даст нам правильный корень
+if [ ! -f "${REPO_ROOT}/requirements.yaml" ]; then
+  REPO_ROOT="$(cd "${SCRIPT_DIR}" && pwd)"
 fi
 
 REQUIREMENTS_FILE="${REPO_ROOT}/requirements.yaml"
@@ -18,6 +21,7 @@ echo "Repo root: ${REPO_ROOT}"
 
 if [ ! -f "${REQUIREMENTS_FILE}" ]; then
   echo "ERROR: requirements.yaml not found at ${REQUIREMENTS_FILE}"
+  ls -la "${SCRIPT_DIR}/../"
   exit 1
 fi
 
