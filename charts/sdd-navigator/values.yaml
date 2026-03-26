@@ -1,0 +1,58 @@
+# @req SCI-HELM-006, SCI-HELM-005
+api:
+  image:
+    repository: ghcr.io/marddegir/sdd-navigator-api
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 8080
+  logLevel: info
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "256Mi"
+  db:
+    host: "PLACEHOLDER_DB_HOST"
+    name: "PLACEHOLDER_DB_NAME"
+    user: "PLACEHOLDER_DB_USER"
+frontend:
+  image:
+    repository: nginx
+    tag: "1.27-alpine"
+    pullPolicy: IfNotPresent
+  replicas: 1
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "64Mi"
+    limits:
+      cpu: "200m"
+      memory: "128Mi"
+ingress:
+  enabled: true
+  host: sdd-navigator.local
+  tls:
+    enabled: false
+    secretName: sdd-navigator-tls
+postgresql:
+  enabled: true
+  image:
+    tag: "15.6.0"
+  auth:
+    database: sddnavigator
+    username: sdduser
+    existingSecret: sdd-db-credentials
+    secretKeys:
+      adminPasswordKey: postgres-password
+      userPasswordKey: password
+  primary:
+    persistence:
+      enabled: true
+      size: 1Gi
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1001
+      fsGroup: 1001

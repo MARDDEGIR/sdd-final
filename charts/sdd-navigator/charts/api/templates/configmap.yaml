@@ -1,0 +1,14 @@
+# @req SCI-HELM-005, SCI-HELM-006
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-api-config
+  labels:
+    app.kubernetes.io/name: api
+    app.kubernetes.io/instance: {{ .Release.Name }}
+data:
+  API_PORT: {{ .Values.port | quote }}
+  DATABASE_HOST: {{ .Values.db.host | quote }}
+  DATABASE_NAME: {{ .Values.db.name | quote }}
+  DATABASE_USER: {{ .Values.db.user | quote }}
+  LOG_LEVEL: {{ .Values.logLevel | quote }}

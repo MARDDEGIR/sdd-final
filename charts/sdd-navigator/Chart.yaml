@@ -1,0 +1,12 @@
+# @req SCI-HELM-001, SCI-HELM-002, SCI-HELM-003
+apiVersion: v2
+name: sdd-navigator
+description: SDD Navigator umbrella chart
+type: application
+version: 1.0.0
+appVersion: "3.0.0"
+dependencies:
+  - name: postgresql
+    version: "13.4.4"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: postgresql.enabled

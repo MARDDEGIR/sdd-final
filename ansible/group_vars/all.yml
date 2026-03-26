@@ -1,0 +1,13 @@
+# @req SCI-ANS-001, SCI-HELM-006
+namespace: sdd-navigator
+release_name: sdd-navigator
+chart_path: "{{ playbook_dir }}/../charts/sdd-navigator"
+api_image: ghcr.io/marddegir/sdd-navigator-api
+api_tag: "1.0.0"
+api_replicas: 2
+frontend_image: nginx
+frontend_tag: "1.27-alpine"
+db_name: sddnavigator
+db_user: sdduser
+domain: sdd-navigator.local
+tls_enabled: false
