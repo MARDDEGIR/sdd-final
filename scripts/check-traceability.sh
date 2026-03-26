@@ -12,11 +12,12 @@ echo "========================================="
 echo "Repo root: ${REPO_ROOT}"
 
 if [ ! -f "${REQUIREMENTS_FILE}" ]; then
-  echo "ERROR: requirements.yaml not found at ${REQUIREMENTS_FILE}"
+  echo "ERROR: requirements.yaml not found"
   exit 1
 fi
 
-VALID_IDS=$(grep "^  - id:" "${REQUIREMENTS_FILE}" | awk "{print \$3}")
+VALID_IDS=$(grep "^  - id:" "${REQUIREMENTS_FILE}" | sed "s/.*id: //")
+echo "Valid IDs found: $(echo "${VALID_IDS}" | wc -l)"
 
 UNANNOTATED=()
 ORPHANS=()
@@ -31,7 +32,7 @@ for dir in charts ansible .github; do
       echo "MISSING @req: ${file#${REPO_ROOT}/}"
     else
       while IFS= read -r req_id; do
-        if ! echo "${VALID_IDS}" | grep -q "^${req_id}$"; then
+        if ! echo "${VALID_IDS}" | grep -qx "${req_id}"; then
           ORPHANS+=("${file#${REPO_ROOT}/}: ${req_id}")
           echo "ORPHAN @req ${req_id} in: ${file#${REPO_ROOT}/}"
         fi
