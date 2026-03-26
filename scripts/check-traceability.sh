@@ -2,7 +2,12 @@
 # @req SCI-TRACE-001
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+if [ -n "${GITHUB_WORKSPACE:-}" ]; then
+  REPO_ROOT="${GITHUB_WORKSPACE}"
+else
+  REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+fi
+
 REQUIREMENTS_FILE="${REPO_ROOT}/requirements.yaml"
 EXIT_CODE=0
 

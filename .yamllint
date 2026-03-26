@@ -1,6 +1,7 @@
-extends: relaxed
+extends: default
 ignore: |
   charts/
+  .github/
 rules:
   line-length:
     max: 300
@@ -8,7 +9,9 @@ rules:
   truthy:
     allowed-values: ["true", "false", "yes", "no"]
     check-keys: false
-    level: warning
   comments:
     min-spaces-from-content: 1
+    level: warning
+  braces:
+    max-spaces-inside: 1
     level: warning
