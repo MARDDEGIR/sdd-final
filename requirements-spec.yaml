@@ -1,7 +1,7 @@
 requirements:
   - id: SCI-HELM-001
     type: FR
-    title: Minimal valid spec
-    description: "Test."
+    title: Fixed
+    description: "OK."
     createdAt: "2026-03-01T00:00:00Z"
     updatedAt: "2026-03-01T00:00:00Z"
