@@ -2,7 +2,7 @@
 # @req SCI-TRACE-001
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(git rev-parse --show-toplevel)"
 REQUIREMENTS_FILE="${REPO_ROOT}/requirements.yaml"
 EXIT_CODE=0
 
@@ -10,14 +10,13 @@ echo "========================================="
 echo "  SDD Navigator Traceability Check"
 echo "========================================="
 echo "Repo root: ${REPO_ROOT}"
-echo "Requirements: ${REQUIREMENTS_FILE}"
 
 if [ ! -f "${REQUIREMENTS_FILE}" ]; then
-  echo "ERROR: requirements.yaml not found at ${REQUIREMENTS_FILE}"
+  echo "ERROR: requirements.yaml not found"
   exit 1
 fi
 
-VALID_IDS=$(grep "^  - id:" "${REQUIREMENTS_FILE}" | awk "{print \$3}")
+VALID_IDS=$(grep "^  - id:" "${REQUIREMENTS_FILE}" | awk '{print $3}')
 
 UNANNOTATED=()
 ORPHANS=()
@@ -25,7 +24,8 @@ ORPHANS=()
 for dir in charts ansible .github; do
   [ ! -d "${REPO_ROOT}/${dir}" ] && continue
   while IFS= read -r -d "" file; do
-    [[ "$(basename $file)" == "Chart.lock" ]] && continue
+    base=$(basename "${file}")
+    [[ "${base}" == "Chart.lock" ]] && continue
     if ! grep -q "@req SCI-" "${file}" 2>/dev/null; then
       UNANNOTATED+=("${file#${REPO_ROOT}/}")
       echo "MISSING @req: ${file#${REPO_ROOT}/}"
