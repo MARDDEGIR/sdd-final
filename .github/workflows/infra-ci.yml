@@ -31,10 +31,8 @@ jobs:
         with:
           version: "3.14.0"
       - run: helm repo add bitnami https://charts.bitnami.com/bitnami
-      run: helm dependency update charts/sdd-navigator
+      - run: helm dependency update charts/sdd-navigator
       - run: helm template charts/sdd-navigator | kubeconform -kubernetes-version 1.28 -strict
-        env:
-        
 
   ansible-lint:
     name: Ansible Lint
