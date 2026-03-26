@@ -2,7 +2,7 @@
 # @req SCI-TRACE-001
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REQUIREMENTS_FILE="${REPO_ROOT}/requirements.yaml"
 EXIT_CODE=0
 
