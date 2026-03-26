@@ -34,7 +34,7 @@ jobs:
       run: helm dependency update charts/sdd-navigator
       - run: helm template charts/sdd-navigator | kubeconform -kubernetes-version 1.28 -strict
         env:
-          KUBECONFIG: /dev/null
+        
 
   ansible-lint:
     name: Ansible Lint
