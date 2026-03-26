@@ -1,7 +1,7 @@
 requirements:
   - id: SCI-HELM-001
     type: FR
-    title: Helm chart for API service
-    description: "Chart MUST define a Deployment for the sdd-coverage Rust API container with configurable image, replicas, resource limits, liveness probe on /healthcheck (initialDelaySeconds: 10, periodSeconds: 15), and readiness probe on /healthcheck (initialDelaySeconds: 5, periodSeconds: 5)."
+    title: Minimal valid spec
+    description: "Test."
     createdAt: "2026-03-01T00:00:00Z"
     updatedAt: "2026-03-01T00:00:00Z"
