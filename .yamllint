@@ -10,3 +10,7 @@ rules:
   truthy:
     allowed-values: ["true", "false", "yes", "no"]
     check-keys: false
+ignore: |
+  charts/*/templates/*.yaml
+  charts/*/charts/*/templates/*.yaml
+  ansible/roles/*/tasks/*.yml

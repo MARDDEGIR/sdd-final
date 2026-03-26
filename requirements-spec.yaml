@@ -57,12 +57,11 @@ requirements:
     type: FR
     title: CI pipeline
     description: "GitHub Actions workflow MUST run helm lint, ansible-lint, and yamllint on every push."
-    createdAt: "2026-03-01T00:00:00Z"
     updatedAt: "2026-03-01T00:00:00Z"
   - id: SCI-CI-002
     type: FR
     title: Manifest validation
-    description:  "CI MUST render Helm templates and validate against Kubernetes schemas using kubeconform."
+    description: "CI MUST render Helm templates and validate against Kubernetes schemas using kubeconform."
     createdAt: "2026-03-01T00:00:00Z"
     updatedAt: "2026-03-01T00:00:00Z"
   - id: SCI-TRACE-001
