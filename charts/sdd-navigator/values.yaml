@@ -44,7 +44,7 @@ postgresql:
   auth:
     database: sddnavigator
     username: sdduser
-    existingSecret: sdd-db-credentials
+    password: supersecret123
     secretKeys:
       adminPasswordKey: postgres-password
       userPasswordKey: password

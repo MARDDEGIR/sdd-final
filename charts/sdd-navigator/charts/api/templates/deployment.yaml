@@ -39,12 +39,6 @@ spec:
                 secretKeyRef:
                   name: sdd-db-credentials
                   key: password
-          livenessProbe:
-            httpGet:
-              path: /healthcheck
-              port: {{ .Values.port }}
-            initialDelaySeconds: 10
-            periodSeconds: 15
           readinessProbe:
             httpGet:
               path: /healthcheck

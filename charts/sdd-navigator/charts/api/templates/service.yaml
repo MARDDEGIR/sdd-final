@@ -12,7 +12,7 @@ spec:
     app.kubernetes.io/name: api
     app.kubernetes.io/instance: {{ .Release.Name }}
   ports:
-    - port: {{ .Values.port }}
-      targetPort: {{ .Values.port }}
+    - port: 8080
+      targetPort: 8080
       protocol: TCP
       name: http
